@@ -48,6 +48,7 @@ def test_search_product():
     assert response.json() is not None
 
 
+
 def test_search_product_missing_parameter():
     url = "https://automationexercise.com/api/searchProduct"
     # should be 400 status code.
@@ -135,6 +136,7 @@ def test_create_account():
     }
 
     response = requests.post(url, data=payload)
+    # should be 201 code
     assert response.status_code == 200
     # expected_message = "User created!"
     # assert response.text == expected_message
@@ -151,6 +153,7 @@ def test_delete_account():
     }
 
     response = requests.delete(url, data=payload)
+
     assert response.status_code == 200
     # expected_message = "Account deleted!"
     # assert response.text == expected_message
