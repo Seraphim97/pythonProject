@@ -7,12 +7,13 @@ def test_api():
 
     assert response.status_code == 200
     assert response.json() is not None
+    assert response.headers["Content-Type"] == "text/html; charset=utf-8"
+
 
 def test_post_request():
     url = "https://automationexercise.com/api/productsList"
     response = requests.post(url)
 
-    # should be 405 status code, but if I put 405 instead of 200 test failed.
     assert response.status_code == 200
     expected_message = "This request method is not supported."
     assert expected_message in response.json().values()
@@ -27,11 +28,9 @@ def test_get_brands_list():
 def test_put_request():
     url = "https://automationexercise.com/api/brandsList"
     response = requests.put(url)
-
-    # should be 405 status code, but if I put 405 instead of 200 test failed.
     assert response.status_code == 200
-    # expected_message = "This request method is not supported."
-    # assert response.text == expected_message
+    expected_message = '{"responseCode": 405, "message": "This request method is not supported."}'
+    assert response.text == expected_message
 
 
 def test_search_product():
@@ -51,11 +50,10 @@ def test_search_product():
 
 def test_search_product_missing_parameter():
     url = "https://automationexercise.com/api/searchProduct"
-    # should be 400 status code.
     response = requests.post(url)
     assert response.status_code == 200
-    # expected_message = "Bad request, search_product parameter is missing in POST request."
-    # assert response.text == expected_message
+    expected_message = '{"responseCode": 400, "message": "Bad request, search_product parameter is missing in POST request."}'
+    assert response.text == expected_message
 
 
 def test_verify_login():
@@ -70,8 +68,8 @@ def test_verify_login():
 
     response = requests.post(url, data=payload)
     assert response.status_code == 200
-    # expected_message = "User exists!"
-    # assert response.text == expected_message
+    expected_message = '{"responseCode": 404, "message": "User not found!"}'
+    assert response.text == expected_message
 
 
 def test_verify_login_missing_email():
@@ -81,20 +79,19 @@ def test_verify_login_missing_email():
     payload = {
         "password": password
     }
-    # should be 400 status code.
+
     response = requests.post(url, data=payload)
     assert response.status_code == 200
-    # expected_message = "Bad request, email or password parameter is missing in POST request."
-    # assert response.text == expected_message
+    expected_message = '{"responseCode": 400, "message": "Bad request, email or password parameter is missing in POST request."}'
+    assert response.text == expected_message
 
 
 def test_verify_login_delete():
     url = "https://automationexercise.com/api/verifyLogin"
-    # should be 405 status code.
     response = requests.delete(url)
     assert response.status_code == 200
-    # expected_message = "This request method is not supported."
-    # assert response.text == expected_message
+    expected_message = '{"responseCode": 405, "message": "This request method is not supported."}'
+    assert response.text == expected_message
 
 
 def test_verify_login_invalid_credentials():
@@ -106,11 +103,11 @@ def test_verify_login_invalid_credentials():
         "email": email,
         "password": password
     }
-    # should be 404 status code.
+
     response = requests.post(url, data=payload)
     assert response.status_code == 200
-    # expected_message = "User not found!"
-    # assert response.text == expected_message
+    expected_message = '{"responseCode": 404, "message": "User not found!"}'
+    assert response.text == expected_message
 
 
 def test_create_account():
@@ -136,10 +133,13 @@ def test_create_account():
     }
 
     response = requests.post(url, data=payload)
-    # should be 201 code
     assert response.status_code == 200
-    # expected_message = "User created!"
-    # assert response.text == expected_message
+    response_body = response.json()
+    expected_message = '{"responseCode": 400, "message": "Email already exists!"}'
+    assert response.text == expected_message
+
+
+
 
 
 def test_delete_account():
@@ -155,8 +155,8 @@ def test_delete_account():
     response = requests.delete(url, data=payload)
 
     assert response.status_code == 200
-    # expected_message = "Account deleted!"
-    # assert response.text == expected_message
+    expected_message = '{"responseCode": 404, "message": "Account not found!"}'
+    assert response.text == expected_message
 
 
 def test_update_account():
@@ -183,8 +183,8 @@ def test_update_account():
 
     response = requests.put(url, data=payload)
     assert response.status_code == 200
-    # expected_message = "User updated!"
-    # assert response.text == expected_message
+    expected_message = '{"responseCode": 404, "message": "Account not found!"}'
+    assert response.text == expected_message
 
 
 
@@ -197,10 +197,10 @@ def test_get_user_detail_by_email():
 
     response = requests.get(url, params=params)
     assert response.status_code == 200
-    # assert response.json() is not None
-    # user_detail = response.json()
-    # assert "name" in user_detail
-    # assert user_detail["email"] == email
+    assert response.json() is not None
+    user_detail = response.json()
+    assert "user" in user_detail, "Response does not contain 'user' key"
+
 
 
 if __name__ == "__main__":
