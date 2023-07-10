@@ -24,6 +24,7 @@ def test_get_brands_list():
 
     assert response.status_code == 200
     assert response.json() is not None
+    assert 'brands'
 
 def test_put_request():
     url = "https://automationexercise.com/api/brandsList"
@@ -45,6 +46,10 @@ def test_search_product():
 
     assert response.status_code == 200
     assert response.json() is not None
+    search_product = response.json()
+    assert 'products' in search_product
+
+
 
 
 
