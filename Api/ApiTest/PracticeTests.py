@@ -6,7 +6,10 @@ def test_api():
     response = requests.get(url)
 
     assert response.status_code == 200
-    assert response.json() is not None
+    assert 'products' in response.json()
+    products = response.json()['products']
+    assert len(products) > 0
+    # assert response.json() is not None
     assert response.headers["Content-Type"] == "text/html; charset=utf-8"
 
 
@@ -24,7 +27,11 @@ def test_get_brands_list():
 
     assert response.status_code == 200
     assert response.json() is not None
-    assert 'brands'
+    assert 'brands' in response.json()
+    brands = response.json()['brands']
+    assert len(brands) > 0
+
+
 
 def test_put_request():
     url = "https://automationexercise.com/api/brandsList"
@@ -102,7 +109,7 @@ def test_verify_login_delete():
 def test_verify_login_invalid_credentials():
     url = "https://automationexercise.com/api/verifyLogin"
     email = "invalid@gmail.com"
-    password = "pass"
+    password = "password"
 
     payload = {
         "email": email,
@@ -206,6 +213,41 @@ def test_get_user_detail_by_email():
     user_detail = response.json()
     assert "user" in user_detail, "Response does not contain 'user' key"
 
+
+
+def test_total_price_in_cart():
+    url = "https://www.automationexercise.com/view_cart"
+    payload = {
+        'product_id': '2',
+        'quantity': 4,
+        'price': 1600
+
+    }
+    response = requests.post(url, data=payload)
+    assert response.status_code == 403
+
+
+def test_delete_product_from_cart():
+    url = "https://www.automationexercise.com/view_cart"
+    response = requests.delete(url)
+    assert response.status_code == 403
+
+
+def test_check_products_categories():
+    url = "https://www.automationexercise.com/category_products/1"
+
+    response = requests.get(url)
+    assert response.status_code == 200
+    category = response.text
+    assert 'category' in response.text
+
+
+def test_product_details():
+    url = "https://www.automationexercise.com/product_details/3"
+    response = requests.get(url)
+    assert response.status_code == 200
+    assert 'Availability' in response.text
+    assert response.headers["Content-Type"] == "text/html; charset=utf-8"
 
 
 if __name__ == "__main__":
