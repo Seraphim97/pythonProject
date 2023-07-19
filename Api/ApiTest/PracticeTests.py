@@ -126,22 +126,22 @@ def test_create_account():
     url = "https://automationexercise.com/api/createAccount"
     payload = {
         "name": "Serafim Savichev",
-        "email": "serafim888@gmail.com",
-        "password": "password",
+        "email": "savichevserafim@gmail.com",
+        "password": "serafim777",
         "title": "Mr",
         "birth_date": "06",
         "birth_month": "01",
         "birth_year": "1997",
         "firstname": "Serafim",
         "lastname": "Savichev",
-        "company": "Company",
-        "address1": "adress1",
+        "company": "cp Company",
+        "address1": "adress",
         "address2": "adress2",
         "country": "Estonia",
         "zipcode": "12345",
         "state": "Harjumaa",
         "city": "Tallinn",
-        "mobile_number": "123456"
+        "mobile_number": "111111"
     }
 
     response = requests.post(url, data=payload)
@@ -248,6 +248,39 @@ def test_product_details():
     assert response.status_code == 200
     assert 'Availability' in response.text
     assert response.headers["Content-Type"] == "text/html; charset=utf-8"
+
+
+
+
+def test_positive_login():
+    url = "https://www.automationexercise.com/login"
+
+    email = "savichevserafim@gmail.com"
+    password = "serafim777"
+
+    payload = {
+        "email": 'savichevserafim@gmail.com',
+        "password": 'serafim111'
+    }
+
+    response = requests.post(url, data=payload)
+    assert response.status_code == 403
+
+
+
+def test_negative_login():
+    url = "https://www.automationexercise.com/login"
+
+    email = "serafim@gmail.com"
+    password = "serafim777"
+
+    payload = {
+        "email": 'savichevserafim@gmail.com',
+        "password": 'serafim1111'
+    }
+
+    response = requests.post(url, data=payload)
+    assert response.status_code == 403
 
 
 if __name__ == "__main__":
